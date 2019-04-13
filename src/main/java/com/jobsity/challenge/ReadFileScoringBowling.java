@@ -1,69 +1,71 @@
-//package com.jobsity.challenge;
-//
-//import java.io.BufferedReader;
-//import java.io.FileReader;
-//import java.io.IOException;
-//import java.nio.file.Files;
-//import java.nio.file.Paths;
-//import java.util.ArrayList;
-//
-//import com.jobsity.challenge.services.IGameServices;
-//import com.jobsity.challenge.services.impl.GameServicesImpl;
-//
-//public class ReadFileScoringBowling {
-//	
-//	public static void main(String[] args) {
-//
-//		StringBuilder sb = new StringBuilder();
-//
-//		try (BufferedReader br = Files.newBufferedReader(Paths.get("src/main/resources/scoringbowling.txt"))) {
-//
-//			// read line by line
-//			String line;
-//			while ((line = br.readLine()) != null) {
-//				sb.append(line).append("\n");
-//			}
-//
-//		} catch (IOException e) {
-//			System.err.format("IOException: %s%n", e);
-//		}
-//
-//		System.out.println(sb);
-//
-//		try {
-//			BufferedReader buf = new BufferedReader(new FileReader("src/main/resources/scoringbowling.txt"));
-//			ArrayList<String> words = new ArrayList<>();
-//			ArrayList<String> wordstest = new ArrayList<>();
-//			String lineJustFetched = null;
-//			String[] wordsArray;
-//			
-//			while (true) {
-//				lineJustFetched = buf.readLine();
-//				IGameServices service  = new GameServicesImpl();
-//				if (lineJustFetched == null) {
-//					break;
-//				} else {
-//					if(!service.verifyLineFrame(lineJustFetched)) {
-//						wordsArray = lineJustFetched.split("\t");
-//						for (String each : wordsArray) {
-//							
-////	                        if(!"".equals(each)){
-////	                            words.add(each);
-////	                        }
-//							words.add(each);
-//						}
-//					}
-//				}
-//			}
-//
-//			for (String each : words) {
-//				System.out.println(each);
-//			}
-//
-//			buf.close();
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-//}
+package com.jobsity.challenge;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import com.jobsity.challenge.entity.PersonScore;
+import com.jobsity.challenge.services.IFileServices;
+import com.jobsity.challenge.services.IGameServices;
+import com.jobsity.challenge.services.impl.FileServicesImpl;
+import com.jobsity.challenge.services.impl.GameServicesImpl;
+
+public class ReadFileScoringBowling {
+
+	public static void main(String[] args) {
+		try {
+			IFileServices fileService = new FileServicesImpl();
+			IGameServices gameService = new GameServicesImpl();
+
+			ArrayList<PersonScore> people = new ArrayList<>();
+			people = fileService.getPersonScoreListFromTXT();
+
+			Map<String, List<PersonScore>> peopleScore = people.stream()
+					.collect(Collectors.groupingBy(PersonScore::getName));
+
+			peopleScore.forEach((key, peopleScoreGroup) -> {
+				List<PersonScore> peopleMapToList = peopleScoreGroup;
+				List<String> totalScore = new ArrayList<>();
+				// format
+				totalScore = gameService.getPainfallsFormat(peopleMapToList);
+				// create map
+				Map<String, List<String>> peopleScoreFormat = new HashMap<>();
+				peopleScoreFormat.put(key, totalScore);
+
+				peopleScoreFormat.forEach((k, pinfallsTotal) -> {
+					List<String> pinfalls = new ArrayList<>();
+					for (int i = 0; i < pinfallsTotal.size() - 1; i++) {
+						if (i % 2 == 0) {
+							if (gameService.isInteger(pinfallsTotal.get(i))
+									&& gameService.isInteger(pinfallsTotal.get(i + 1))) {
+								Integer ntotal = gameService.getPinfallNumber(pinfallsTotal.get(i))
+										+ gameService.getPinfallNumber(pinfallsTotal.get(i + 1));
+								if (ntotal == 10) {
+									pinfalls.add(pinfallsTotal.get(i));
+									pinfalls.add("/");
+								} else {
+									pinfalls.add(pinfallsTotal.get(i));
+									pinfalls.add(pinfallsTotal.get(i + 1));
+								}
+							} else {
+								pinfalls.add(pinfallsTotal.get(i));
+								pinfalls.add(pinfallsTotal.get(i + 1));
+							}
+						}
+					}
+					List<String> oldValue = peopleScoreFormat.put(k, pinfalls);
+				});
+				// change / how n1 + n2 = 10
+				System.out.println(peopleScoreFormat);
+//				totalScore.forEach(data -> {
+//					System.out.println(data);
+//				});
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+}
