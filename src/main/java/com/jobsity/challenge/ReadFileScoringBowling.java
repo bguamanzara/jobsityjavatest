@@ -55,7 +55,7 @@ public class ReadFileScoringBowling {
 							}
 						}
 					}
-					List<String> oldValue = peopleScoreFormat.put(k, pinfalls);
+					peopleScoreFormat.put(k, pinfalls);
 				});
 				// change / how n1 + n2 = 10
 				System.out.println(peopleScoreFormat);

@@ -39,7 +39,7 @@ public class GameServicesImpl implements IGameServices {
 			if (naux == null) {
 				totalScore.add("F");
 			}else if(naux == 10){
-				totalScore.add("");
+				totalScore.add("-");
 				totalScore.add("X");
 			}else {
 				totalScore.add(naux.toString());
