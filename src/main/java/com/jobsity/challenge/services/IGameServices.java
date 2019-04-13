@@ -21,6 +21,16 @@ public interface IGameServices {
 	 * @return List<String>
 	 */
 	public List<String> getPainfallsFormat(List<PersonScore> peopleMapToList);
+	/**
+	 * 
+	 * @param String
+	 * @return List<String>
+	 */
 	public boolean isInteger(String s);
+	/**
+	 * 
+	 * @param string Score
+	 * @return Integer
+	 */
 	public Integer getPinfallNumber(String score);
 }
