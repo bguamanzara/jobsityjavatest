@@ -27,11 +27,14 @@ public class FileServicesImpl implements IFileServices {
 							int validateScore = Integer.parseInt(wordsArray[1]);
 							if(validateScore > 10 || validateScore <0) {
 								buf.close();
-								throw new RuntimeException("One or more scores is incorrect");
+								throw new RuntimeException("One or more scores is incorrect.... please review!!");
 							}
 						}
 						person = new PersonScore(wordsArray[0], wordsArray[1]);
 						people.add(person);
+					}else {
+						buf.close();
+						throw new RuntimeException("File structure malformed..... please review!!");
 					}
 				}
 			}
