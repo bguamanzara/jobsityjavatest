@@ -7,10 +7,10 @@ import com.jobsity.challenge.entity.PersonScore;
 public interface IGameServices {
 
 	/**
-	 * Get People score from txt file;
-	 * @return boolean
+	 * Get total score 
+	 * @return List<String>
 	 */
-	public boolean getTotalPinfalls(String key, List<String> score);
+	public List<String> getTotalScore(String key, List<String> score);
 	/**
 	 * Get score;
 	 * @return Integer

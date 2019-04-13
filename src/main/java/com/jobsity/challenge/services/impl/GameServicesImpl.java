@@ -8,14 +8,10 @@ import com.jobsity.challenge.services.IGameServices;
 
 public class GameServicesImpl implements IGameServices {
 
-	public boolean verifyLineFrame(String line) {
-	       return line.contains("Frame"); 
-	}
-
 	@Override
-	public boolean getTotalPinfalls(String key, List<String> score) {
+	public List<String> getTotalScore(String key, List<String> score) {
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
 
 	@Override
